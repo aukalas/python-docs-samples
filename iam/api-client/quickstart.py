@@ -69,9 +69,9 @@ def modify_policy_add_role(crm_service, project_id, role, member):
             binding = b
             break
     if binding is not None:
-        binding["members"].append(member)
+        binding["members"].append(f'user:{member}')
     else:
-        binding = {"role": role, "members": [member]}
+        binding = {"role": role, "members": [f'user:{member}']}
         policy["bindings"].append(binding)
 
     set_policy(crm_service, project_id, policy)
@@ -83,8 +83,8 @@ def modify_policy_remove_member(crm_service, project_id, role, member):
     policy = get_policy(crm_service, project_id)
 
     binding = next(b for b in policy["bindings"] if b["role"] == role)
-    if "members" in binding and member in binding["members"]:
-        binding["members"].remove(member)
+    if "members" in binding and f'user:{member}' in binding["members"]:
+        binding["members"].remove(f'user:{member}')
 
     set_policy(crm_service, project_id, policy)
 
